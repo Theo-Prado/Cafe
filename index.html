@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Canelinha Café — Auto Atendimento</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #FAF6EF;
+      --brown-dark: #2C1A0E;
+      --brown-mid: #6B3F1E;
+      --brown-light: #C08050;
+      --gold: #D4A853;
+      --gold-light: #F0D49A;
+      --warm-white: #FFF9F2;
+      --text-muted: #7A5C45;
+    }
+
+    html, body {
+      height: 100%;
+      background: #1A0E06;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .kiosk {
+      width: 420px;
+      min-height: 620px;
+      background: linear-gradient(160deg, #2C1A0E 0%, #4A2810 40%, #6B3F1E 100%);
+      border-radius: 24px;
+      overflow: hidden;
+      color: var(--warm-white);
+      position: relative;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+    }
+
+    .kiosk::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--gold), #F0D49A, var(--gold));
+      z-index: 10;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      text-align: center;
+      padding: 28px 24px 18px;
+      border-bottom: 1px solid rgba(212,168,83,0.25);
+      position: relative;
+    }
+
+    .header::after {
+      content: '☕';
+      font-size: 14px;
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #3A2010;
+      padding: 0 10px;
+    }
+
+    .cafe-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--gold-light);
+      text-transform: uppercase;
+    }
+
+    .since {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--brown-light);
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    /* ── GREETING ── */
+    .greeting {
+      padding: 14px 24px;
+      font-size: 13px;
+      color: rgba(240,212,154,0.8);
+      text-align: center;
+      font-style: italic;
+      border-bottom: 1px solid rgba(212,168,83,0.12);
+      line-height: 1.5;
+    }
+
+    .greeting span { color: var(--gold-light); font-style: normal; font-weight: 500; }
+
+    /* ── NAME SCREEN ── */
+    .name-screen {
+      padding: 48px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .name-screen h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--gold-light);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* ── INPUTS ── */
+    .gold-input {
+      width: 100%;
+      max-width: 320px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(212,168,83,0.4);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 16px;
+      color: var(--warm-white);
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .gold-input:focus { border-color: var(--gold); }
+    .gold-input::placeholder { color: rgba(192,128,80,0.5); }
+
+    .cpf-input {
+      width: 100%;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(212,168,83,0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: var(--warm-white);
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
+    }
+
+    .cpf-input:focus { border-color: var(--gold); }
+    .cpf-input::placeholder { color: rgba(192,128,80,0.5); }
+
+    /* ── BUTTONS ── */
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), #C4922A);
+      border: none;
+      border-radius: 10px;
+      padding: 12px 36px;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      color: var(--brown-dark);
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .btn-gold:hover { opacity: 0.9; }
+    .btn-gold:active { transform: scale(0.97); }
+
+    .btn-sm {
+      background: rgba(212,168,83,0.15);
+      border: 1px solid rgba(212,168,83,0.3);
+      border-radius: 8px;
+      padding: 9px 18px;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--gold-light);
+      cursor: pointer;
+      margin-right: 8px;
+      transition: background 0.2s;
+    }
+
+    .btn-sm:hover { background: rgba(212,168,83,0.25); }
+
+    .btn-checkout {
+      width: 100%;
+      margin-top: 14px;
+      background: linear-gradient(135deg, var(--gold), #C4922A);
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      color: var(--brown-dark);
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-checkout:hover { opacity: 0.9; }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      padding: 16px 20px 0;
+      gap: 4px;
+      border-bottom: 1px solid rgba(212,168,83,0.15);
+    }
+
+    .tab {
+      padding: 8px 16px;
+      border-radius: 8px 8px 0 0;
+      font-size: 13px;
+      color: var(--brown-light);
+      cursor: pointer;
+      border: 1px solid transparent;
+      border-bottom: none;
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      background: rgba(212,168,83,0.12);
+      border-color: rgba(212,168,83,0.2);
+      color: var(--gold-light);
+    }
+
+    /* ── MENU ── */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 20px;
+    }
+
+    .menu-item {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(212,168,83,0.15);
+      border-radius: 14px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .menu-item::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .menu-item:hover { background: rgba(212,168,83,0.12); border-color: rgba(212,168,83,0.35); }
+    .menu-item:hover::before { opacity: 1; }
+    .menu-item.special { border-color: rgba(212,168,83,0.35); background: rgba(212,168,83,0.08); }
+
+    .item-icon { font-size: 22px; margin-bottom: 8px; display: block; }
+    .item-name { font-size: 13px; font-weight: 500; color: var(--warm-white); line-height: 1.3; }
+    .item-tag { font-size: 10px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+    .item-price { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--gold-light); margin-top: 6px; }
+
+    /* ── CART ── */
+    .cart-section { padding: 20px; }
+
+    .cart-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .cart-empty-icon { font-size: 36px; display: block; margin-bottom: 10px; opacity: 0.5; }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(212,168,83,0.1);
+    }
+
+    .cart-item-name { font-size: 14px; color: var(--warm-white); }
+    .cart-item-price { font-size: 14px; color: var(--gold-light); font-family: 'Playfair Display', serif; }
+
+    .cart-remove {
+      background: rgba(255,80,80,0.1);
+      border: 1px solid rgba(255,100,100,0.2);
+      border-radius: 6px;
+      width: 26px; height: 26px;
+      color: #FF8080;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin-left: 10px;
+      transition: background 0.2s;
+    }
+
+    .cart-remove:hover { background: rgba(255,80,80,0.2); }
+
+    .cart-total {
+      margin-top: 16px;
+      padding: 16px;
+      background: rgba(212,168,83,0.1);
+      border: 1px solid rgba(212,168,83,0.2);
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .total-label { font-size: 13px; color: var(--brown-light); text-transform: uppercase; letter-spacing: 1px; }
+    .total-value { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--gold-light); }
+    .discount-badge { font-size: 11px; color: #7FD197; background: rgba(127,209,151,0.1); border: 1px solid rgba(127,209,151,0.25); padding: 2px 8px; border-radius: 20px; margin-top: 4px; display: inline-block; }
+
+    /* ── ACCOUNT ── */
+    .account-section { padding: 20px; }
+
+    .account-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(212,168,83,0.15);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .account-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      color: var(--gold-light);
+      margin-bottom: 12px;
+    }
+
+    /* ── MESSAGES ── */
+    .msg { font-size: 13px; margin-top: 10px; padding: 8px 12px; border-radius: 8px; }
+    .msg.success { background: rgba(127,209,151,0.1); color: #7FD197; border: 1px solid rgba(127,209,151,0.2); }
+    .msg.error   { background: rgba(255,100,100,0.1); color: #FF9090; border: 1px solid rgba(255,100,100,0.2); }
+
+    .discount-on {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: rgba(127,209,151,0.08);
+      border: 1px solid rgba(127,209,151,0.2);
+      border-radius: 10px;
+      color: #7FD197;
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    /* ── CART BADGE ── */
+    .cart-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px; height: 18px;
+      background: var(--gold);
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--brown-dark);
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    /* ── SUCCESS SCREEN ── */
+    .success-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+      text-align: center;
+      gap: 16px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .success-icon { font-size: 56px; }
+    .success-title { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--gold-light); }
+    .success-sub { color: var(--brown-light); font-size: 14px; line-height: 1.7; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .main-layout { display: none; flex-direction: column; }
+  </style>
+</head>
+<body>
+
+<div class="kiosk">
+
+  <!-- TOPO -->
+  <div class="header">
+    <div class="cafe-name">Canelinha Café</div>
+    <div class="since">✦ desde 1980 ✦</div>
+  </div>
+
+  <!-- TELA DE NOME -->
+  <div id="nameScreen" class="name-screen">
+    <h2>Bem-vindo!<br>
+      <span style="font-style:italic;font-weight:400;font-size:18px;color:var(--brown-light)">
+        Como podemos chamá-lo(a)?
+      </span>
+    </h2>
+    <input class="gold-input" id="nameInput" placeholder="Seu nome..." maxlength="40" />
+    <button class="btn-gold" onclick="startSession()">Entrar →</button>
+  </div>
+
+  <!-- LAYOUT PRINCIPAL -->
+  <div id="mainLayout" class="main-layout">
+    <div class="greeting" id="greetingMsg"></div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('menu', this)">Cardápio</div>
+      <div class="tab" onclick="switchTab('cart', this)" id="cartTab">Carrinho</div>
+      <div class="tab" onclick="switchTab('account', this)">Conta</div>
+    </div>
+
+    <!-- MENU -->
+    <div id="menuPanel">
+      <div class="menu-grid" id="menuGrid"></div>
+    </div>
+
+    <!-- CARRINHO -->
+    <div id="cartPanel" class="cart-section" style="display:none;">
+      <div id="cartContent"></div>
+    </div>
+
+    <!-- CONTA -->
+    <div id="accountPanel" class="account-section" style="display:none;">
+      <div id="discountStatus"></div>
+      <div class="account-card" id="registerCard">
+        <h3>Cadastrar / Entrar com CPF</h3>
+        <input class="cpf-input" id="regCpf" placeholder="000.000.000-00" maxlength="14" />
+        <div>
+          <button class="btn-sm" onclick="registerCpf()">Cadastrar</button>
+          <button class="btn-sm" onclick="loginCpf()">Entrar</button>
+        </div>
+        <div id="accountMsg"></div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);text-align:center;line-height:1.6;">
+        Clientes cadastrados recebem<br>10% de desconto em todos os pedidos.
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA DE SUCESSO -->
+  <div id="successScreen" class="success-screen">
+    <div class="success-icon">✓</div>
+    <div class="success-title" id="successTitle"></div>
+    <div class="success-sub" id="successSub"></div>
+    <button class="btn-gold" onclick="resetAll()">Novo pedido</button>
+  </div>
+
+</div>
+
+<script>
+  const MENU = [
+    { name: "Canelinha",      tag: "Especialidade da casa", price: 15, icon: "✨" },
+    { name: "Cappuccino",     tag: "",                      price: 12, icon: "☕" },
+    { name: "Mocaccino",      tag: "",                      price: 11, icon: "🍫" },
+    { name: "Espresso",       tag: "",                      price: 8,  icon: "⚡" },
+    { name: "Espresso Latte", tag: "",                      price: 10, icon: "🥛" },
+    { name: "Latte",          tag: "",                      price: 10, icon: "🫗" },
+  ];
+
+  let cart = [];
+  let cadastros = [];
+  let desconto = false;
+  let userName = '';
+
+  /* ── CPF VALIDATION ── */
+  function validateCPF(raw) {
+    const cpf = raw.replace(/\D/g, '');
+    if (cpf.length !== 11 || cpf === cpf[0].repeat(11)) return false;
+    let soma = 0;
+    for (let i = 0; i < 9; i++) soma += parseInt(cpf[i]) * (10 - i);
+    let d1 = (soma * 10) % 11; if (d1 === 10) d1 = 0;
+    soma = 0;
+    for (let i = 0; i < 10; i++) soma += parseInt(cpf[i]) * (11 - i);
+    let d2 = (soma * 10) % 11; if (d2 === 10) d2 = 0;
+    return d1 === parseInt(cpf[9]) && d2 === parseInt(cpf[10]);
+  }
+
+  /* ── START SESSION ── */
+  function startSession() {
+    const n = document.getElementById('nameInput').value.trim();
+    if (!n) { document.getElementById('nameInput').focus(); return; }
+    userName = n;
+    document.getElementById('nameScreen').style.display = 'none';
+    const ml = document.getElementById('mainLayout');
+    ml.style.display = 'flex';
+    ml.style.animation = 'fadeIn 0.4s ease';
+    document.getElementById('greetingMsg').innerHTML =
+      `Olá, <span>${userName}</span>! Bem-vindo(a) ao Canelinha Café — a melhor cafeteria da região desde 1980!`;
+    buildMenu();
+    renderCart();
+    renderDiscountStatus();
+  }
+
+  /* ── MENU ── */
+  function buildMenu() {
+    const grid = document.getElementById('menuGrid');
+    grid.innerHTML = MENU.map((item, i) => `
+      <div class="menu-item ${item.tag ? 'special' : ''}" onclick="addToCart(${i})">
+        <span class="item-icon">${item.icon}</span>
+        ${item.tag ? `<div class="item-tag">${item.tag}</div>` : ''}
+        <div class="item-name">${item.name}</div>
+        <div class="item-price">R$ ${item.price}</div>
+      </div>
+    `).join('');
+  }
+
+  function addToCart(index) {
+    cart.push({ ...MENU[index] });
+    updateCartBadge();
+    flashMenuItem(index);
+    renderCart();
+  }
+
+  function flashMenuItem(index) {
+    const items = document.querySelectorAll('.menu-item');
+    const el = items[index];
+    if (!el) return;
+    el.style.background = 'rgba(212,168,83,0.22)';
+    el.style.borderColor = 'rgba(212,168,83,0.6)';
+    setTimeout(() => { el.style.background = ''; el.style.borderColor = ''; }, 400);
+  }
+
+  /* ── CART BADGE ── */
+  function updateCartBadge() {
+    const tab = document.getElementById('cartTab');
+    const existing = tab.querySelector('.cart-badge');
+    if (existing) existing.remove();
+    if (cart.length > 0) {
+      tab.innerHTML = 'Carrinho' + `<span class="cart-badge">${cart.length}</span>`;
+    } else {
+      tab.textContent = 'Carrinho';
+    }
+  }
+
+  function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCartBadge();
+    renderCart();
+  }
+
+  function getTotal() {
+    const sum = cart.reduce((a, b) => a + b.price, 0);
+    return desconto ? sum * 0.9 : sum;
+  }
+
+  /* ── RENDER CART ── */
+  function renderCart() {
+    const el = document.getElementById('cartContent');
+    if (cart.length === 0) {
+      el.innerHTML = `
+        <div class="cart-empty">
+          <span class="cart-empty-icon">☕</span>
+          Seu carrinho está vazio.<br>
+          <span style="font-size:12px;margin-top:6px;display:block;color:var(--text-muted)">
+            Adicione itens no cardápio.
+          </span>
+        </div>`;
+      return;
+    }
+    const raw   = cart.reduce((a, b) => a + b.price, 0);
+    const total = getTotal();
+    el.innerHTML = `
+      ${cart.map((item, i) => `
+        <div class="cart-item">
+          <div><div class="cart-item-name">${item.icon} ${item.name}</div></div>
+          <div style="display:flex;align-items:center;">
+            <div class="cart-item-price">R$ ${item.price}</div>
+            <button class="cart-remove" onclick="removeFromCart(${i})">×</button>
+          </div>
+        </div>
+      `).join('')}
+      <div class="cart-total">
+        <div>
+          <div class="total-label">Total</div>
+          ${desconto ? `<span class="discount-badge">10% de desconto aplicado</span>` : ''}
+        </div>
+        <div style="text-align:right;">
+          ${desconto && raw !== total
+            ? `<div style="font-size:12px;color:var(--text-muted);text-decoration:line-through;">R$ ${raw.toFixed(2)}</div>`
+            : ''}
+          <div class="total-value">R$ ${total.toFixed(2)}</div>
+        </div>
+      </div>
+      <button class="btn-checkout" onclick="checkout()">Finalizar pedido →</button>
+    `;
+  }
+
+  /* ── ACCOUNT ── */
+  function renderDiscountStatus() {
+    const el   = document.getElementById('discountStatus');
+    const card = document.getElementById('registerCard');
+    if (desconto) {
+      el.innerHTML = `<div class="discount-on">✓ Desconto de 10% ativo no seu pedido!</div>`;
+      card.style.display = 'none';
+    } else {
+      el.innerHTML = '';
+      card.style.display = 'block';
+    }
+  }
+
+  function registerCpf() {
+    const cpf    = document.getElementById('regCpf').value.replace(/\D/g, '');
+    const msgEl  = document.getElementById('accountMsg');
+    if (!validateCPF(cpf)) {
+      msgEl.innerHTML = `<div class="msg error">CPF inválido ou digitado incorretamente.</div>`;
+      return;
+    }
+    if (!cadastros.includes(cpf)) cadastros.push(cpf);
+    desconto = true;
+    msgEl.innerHTML = `<div class="msg success">Cadastro realizado! 10% de desconto aplicado.</div>`;
+    renderDiscountStatus();
+    renderCart();
+    setTimeout(() => { msgEl.innerHTML = ''; }, 3000);
+  }
+
+  function loginCpf() {
+    const cpf   = document.getElementById('regCpf').value.replace(/\D/g, '');
+    const msgEl = document.getElementById('accountMsg');
+    if (!validateCPF(cpf)) {
+      msgEl.innerHTML = `<div class="msg error">CPF inválido.</div>`; return;
+    }
+    if (cadastros.includes(cpf)) {
+      desconto = true;
+      msgEl.innerHTML = `<div class="msg success">Login realizado! 10% de desconto aplicado.</div>`;
+      renderDiscountStatus();
+      renderCart();
+      setTimeout(() => { msgEl.innerHTML = ''; }, 3000);
+    } else {
+      msgEl.innerHTML = `<div class="msg error">CPF não encontrado. Cadastre-se primeiro.</div>`;
+    }
+  }
+
+  /* ── TABS ── */
+  function switchTab(tab, el) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('menuPanel').style.display    = tab === 'menu'    ? 'block' : 'none';
+    document.getElementById('cartPanel').style.display    = tab === 'cart'    ? 'block' : 'none';
+    document.getElementById('accountPanel').style.display = tab === 'account' ? 'block' : 'none';
+    if (tab === 'cart') renderCart();
+  }
+
+  /* ── CHECKOUT ── */
+  function checkout() {
+    if (cart.length === 0) return;
+    const total = getTotal();
+    document.getElementById('mainLayout').style.display = 'none';
+    const ss = document.getElementById('successScreen');
+    ss.style.display = 'flex';
+    document.getElementById('successTitle').textContent = 'Pedido confirmado!';
+    document.getElementById('successSub').innerHTML =
+      `Total: <strong style="color:var(--gold-light)">R$ ${total.toFixed(2)}</strong><br><br>
+       Obrigado por comprar no Canelinha Café!<br>Volte sempre, ${userName}! 🤎`;
+  }
+
+  /* ── RESET ── */
+  function resetAll() {
+    cart = []; desconto = false; userName = '';
+    document.getElementById('successScreen').style.display = 'none';
+    document.getElementById('mainLayout').style.display    = 'none';
+    document.getElementById('nameScreen').style.display    = 'flex';
+    document.getElementById('nameInput').value = '';
+    const cpfEl = document.getElementById('regCpf');
+    if (cpfEl) cpfEl.value = '';
+    updateCartBadge();
+  }
+
+  /* ── ENTER KEY ── */
+  document.getElementById('nameInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') startSession();
+  });
+</script>
+</body>
+</html>
