@@ -144,14 +144,33 @@ elif 1 <= escolha <= len(opcoes):
       print("Login realizado com sucesso! Haverá um desconto de 10% em seu pedido!")
     else:
       print("Desculpe, esse cpf não esta cadastrado em nosso sistema.")
-  elif escolha == 11:
-    escolha1 = int(input("Digite o item que deseja remover:"))
-    conta = escolha1 - 1
-    escolha2 = int(input("Digite quantos desse item deseja remover:"))
-    escolha2 = escolha2 + 1
-    for item in range(1,escolha2):
-                      historico.remove(opcoes[conta])
-                      historico_precos.remove(precos[conta])
+elif escolha == 11:
+    lista_cafes = list(opcoes.keys())
+
+    escolha1 = int(input("Digite o número do item que deseja remover: "))
+    cafe = lista_cafes[escolha1 - 1]
+
+    if cafe not in historico:
+        print("Esse item não está no carrinho.")
+    
+    else:
+        quantidade_remover = int(input(f"Quantos {cafe} deseja remover? "))
+        quantidade_atual = historico[cafe]
+
+        if quantidade_remover <= 0:
+            print("Quantidade inválida.")
+
+        elif quantidade_remover >= quantidade_atual:
+            # remove tudo
+            del historico[cafe]
+            opcoes[cafe][1] += quantidade_atual  # devolve ao estoque
+            print(f"{cafe} removido completamente do carrinho.")
+
+        else:
+            # remove parcialmente
+            historico[cafe] -= quantidade_remover
+            opcoes[cafe][1] += quantidade_remover  # devolve ao estoque
+            print(f"{quantidade_remover}x {cafe} removido(s).")
     print()
     print("Remoção realizada!")
     print()
