@@ -1,230 +1,231 @@
 print(".....Canelinha Cafe.....")
 print(".......since 1980.......")
 print()
-nome = input("Digite seu nome:")
+
+name = input("Enter your name: ")
 print()
-print("Olá,", nome+"!", "Seja bem-vindo(a) ao Canelinha Cafe!")
+print("Hello,", name+"!", "Welcome to Canelinha Cafe!")
 print()
 
-opcoes = {
-    "cappucino": [12, 10],
-    "frappucino": [12, 10],
-    "moccacino": [12, 10],
-    "macciato": [12, 10],
+options = {
+    "cappuccino": [12, 10],
+    "frappuccino": [12, 10],
+    "moccaccino": [12, 10],
+    "macchiato": [12, 10],
     "latte": [10, 10],
     "espresso": [7, 10],
     "espresso latte": [9, 10]
 }
 
-cadastros = {}
-historico = {}
+users = {}
+cart = {}
 
-desconto = False
-ciclo = True
+discount = False
+running = True
 
 
-# ---------------- CPF ----------------
-def validar_cpf(cpf):
+# ---------------- CPF VALIDATION ----------------
+def validate_cpf(cpf):
     cpf = cpf.replace('.', '').replace('-', '')
 
     if len(cpf) != 11 or cpf == cpf[0] * 11:
         return False
 
-    soma = 0
+    total = 0
     for i in range(9):
-        soma += int(cpf[i]) * (10 - i)
+        total += int(cpf[i]) * (10 - i)
 
-    dig1 = (soma * 10) % 11
-    if dig1 == 10:
-        dig1 = 0
+    digit1 = (total * 10) % 11
+    if digit1 == 10:
+        digit1 = 0
 
-    soma = 0
+    total = 0
     for i in range(10):
-        soma += int(cpf[i]) * (11 - i)
+        total += int(cpf[i]) * (11 - i)
 
-    dig2 = (soma * 10) % 11
-    if dig2 == 10:
-        dig2 = 0
+    digit2 = (total * 10) % 11
+    if digit2 == 10:
+        digit2 = 0
 
-    return dig1 == int(cpf[9]) and dig2 == int(cpf[10])
+    return digit1 == int(cpf[9]) and digit2 == int(cpf[10])
 
 
-# ---------------- Carrinho ----------------
-def mostrar_carrinho(historico, opcoes, desconto):
-    if not historico:
-        print("Carrinho vazio.")
+# ---------------- CART ----------------
+def show_cart(cart, options, discount):
+    if not cart:
+        print("Cart is empty.")
         return
 
     total = 0
 
-    for item in historico:
-        qtd = historico[item]
-        preco = opcoes[item][0]
-        subtotal = qtd * preco
+    for item in cart:
+        qty = cart[item]
+        price = options[item][0]
+        subtotal = qty * price
         total += subtotal
-        print(f"- {item} x{qtd} = R$ {subtotal}")
+        print(f"- {item} x{qty} = $ {subtotal}")
 
-    if desconto:
-        print("Total com desconto: R$", total * 0.9)
+    if discount:
+        print("Total with discount: $", total * 0.9)
     else:
-        print("Total: R$", total)
+        print("Total: $", total)
 
 
 # ---------------- ADMIN ----------------
-def menu_admin(opcoes):
-    admin_ciclo = True
+def admin_menu(options):
+    admin_running = True
 
-    while admin_ciclo:
-        print("\n--- MENU ADMIN ---")
-        contador = 1
-        lista = list(opcoes.keys())
+    while admin_running:
+        print("\n--- ADMIN MENU ---")
+        counter = 1
+        item_list = list(options.keys())
 
-        for cafe in lista:
-            print(contador, "-", cafe, "| Estoque:", opcoes[cafe][1])
-            contador += 1
+        for coffee in item_list:
+            print(counter, "-", coffee, "| Stock:", options[coffee][1])
+            counter += 1
 
-        print("1 - Alterar estoque")
-        print("2 - Adicionar estoque")
-        print("3 - Zerar estoque")
-        print("0 - Sair do admin")
+        print("1 - Change stock")
+        print("2 - Add stock")
+        print("3 - Reset stock")
+        print("0 - Exit admin")
 
-        escolha = int(input("Escolha: "))
+        choice = int(input("Choice: "))
 
-        if escolha == 0:
-            admin_ciclo = False
+        if choice == 0:
+            admin_running = False
 
-        elif escolha in [1, 2, 3]:
+        elif choice in [1, 2, 3]:
             while True:
                 try:
-                    item = int(input("Digite o número do produto: "))
-                    if 1 <= item <= len(lista):
+                    item = int(input("Enter product number: "))
+                    if 1 <= item <= len(item_list):
                         break
                     else:
-                        print(f"Número inválido. Digite um número entre 1 e {len(lista)}.")
+                        print(f"Invalid number. Choose between 1 and {len(item_list)}.")
                 except ValueError:
-                    print("Entrada inválida. Digite um número inteiro.")
-            
-            cafe = lista[item - 1]
+                    print("Invalid input. Enter a number.")
 
-            if escolha == 1:
-                novo = int(input("Novo valor de estoque: "))
-                opcoes[cafe][1] = novo
-                print("Estoque atualizado!")
+            coffee = item_list[item - 1]
 
-            elif escolha == 2:
-                add = int(input("Quantidade para adicionar: "))
-                opcoes[cafe][1] += add
-                print("Estoque adicionado!")
+            if choice == 1:
+                new_value = int(input("New stock value: "))
+                options[coffee][1] = new_value
+                print("Stock updated!")
 
-            elif escolha == 3:
-                opcoes[cafe][1] = 0
-                print("Estoque zerado!")
+            elif choice == 2:
+                add = int(input("Amount to add: "))
+                options[coffee][1] += add
+                print("Stock added!")
+
+            elif choice == 3:
+                options[coffee][1] = 0
+                print("Stock reset!")
 
         else:
-            print("Opção inválida.")
+            print("Invalid option.")
 
 
-# ---------------- MENU ----------------
-while ciclo:
-    contador = 1
-    for cafe in opcoes:
-        print(contador, "-", cafe, "R$", opcoes[cafe][0], "| Estoque:", opcoes[cafe][1])
-        contador += 1
+# ---------------- MAIN MENU ----------------
+while running:
+    counter = 1
+    for coffee in options:
+        print(counter, "-", coffee, "$", options[coffee][0], "| Stock:", options[coffee][1])
+        counter += 1
 
-    print("9 - Ver carrinho")
-    print("10 - Cadastrar")
+    print("9 - View cart")
+    print("10 - Register")
     print("11 - Login")
-    print("12 - Remover item")
-    print("0 - Finalizar")
+    print("12 - Remove item")
+    print("0 - Finish")
     print()
 
-    escolha = int(input("Escolha: "))
+    choice = int(input("Choice: "))
     print()
 
-    if escolha == 0:
-        mostrar_carrinho(historico, opcoes, desconto)
-        print("Obrigado por comprar!")
+    if choice == 0:
+        show_cart(cart, options, discount)
+        print("Thanks for your purchase!")
         break
 
-    elif 1 <= escolha <= len(opcoes):
-        lista = list(opcoes.keys())
-        cafe = lista[escolha - 1]
+    elif 1 <= choice <= len(options):
+        item_list = list(options.keys())
+        coffee = item_list[choice - 1]
 
-        qtd = int(input("Quantidade: "))
-        estoque = opcoes[cafe][1]
+        qty = int(input("Quantity: "))
+        stock = options[coffee][1]
 
-        if qtd <= estoque and qtd > 0:
-            historico[cafe] = historico.get(cafe, 0) + qtd
-            opcoes[cafe][1] -= qtd
-            print("Pedido adicionado!")
+        if qty <= stock and qty > 0:
+            cart[coffee] = cart.get(coffee, 0) + qty
+            options[coffee][1] -= qty
+            print("Item added!")
         else:
-            print("Estoque insuficiente!")
+            print("Insufficient stock!")
 
-    elif escolha == 9:
-        mostrar_carrinho(historico, opcoes, desconto)
+    elif choice == 9:
+        show_cart(cart, options, discount)
 
-    elif escolha == 10:
-        usuario = input("Crie um usuário: ")
+    elif choice == 10:
+        username = input("Create a username: ")
 
-        if usuario in cadastros:
-            print("Usuário já existe.")
+        if username in users:
+            print("Username already exists.")
             continue
 
-        senha = input("Crie uma senha: ")
-        confirmar = input("Confirme a senha: ")
+        password = input("Create a password: ")
+        confirm = input("Confirm password: ")
 
-        if senha != confirmar:
-            print("Senhas não coincidem.")
+        if password != confirm:
+            print("Passwords do not match.")
             continue
 
-        cpf = input("Digite seu CPF: ")
+        cpf = input("Enter your CPF: ")
 
-        if not validar_cpf(cpf):
-            print("CPF inválido.")
+        if not validate_cpf(cpf):
+            print("Invalid CPF.")
             continue
 
-        cadastros[usuario] = {"senha": senha, "cpf": cpf}
-        print("Cadastro realizado com sucesso! Desconto aplicado.")
-        desconto = True
+        users[username] = {"password": password, "cpf": cpf}
+        print("Registration successful! Discount applied.")
+        discount = True
 
-    elif escolha == 11:
-        usuario = input("Usuário: ")
-        senha = input("Senha: ")
+    elif choice == 11:
+        username = input("Username: ")
+        password = input("Password: ")
 
-        # 🔥 LOGIN ADMIN
-        if usuario == "admin" and senha == "admin@155":
-            print("Login ADMIN realizado!")
-            menu_admin(opcoes)
+        # ADMIN LOGIN
+        if username == "admin" and password == "admin@155":
+            print("ADMIN login successful!")
+            admin_menu(options)
 
-        # LOGIN NORMAL
-        elif usuario in cadastros and cadastros[usuario]["senha"] == senha:
-            print("Login realizado!")
-            desconto = True
+        # NORMAL LOGIN
+        elif username in users and users[username]["password"] == password:
+            print("Login successful!")
+            discount = True
 
         else:
-            print("Usuário ou senha incorretos.")
+            print("Incorrect username or password.")
 
-    elif escolha == 12:
-        lista = list(opcoes.keys())
+    elif choice == 12:
+        item_list = list(options.keys())
 
-        escolha_item = int(input("Número do item: "))
-        cafe = lista[escolha_item - 1]
+        item_choice = int(input("Item number: "))
+        coffee = item_list[item_choice - 1]
 
-        if cafe not in historico:
-            print("Não está no carrinho.")
+        if coffee not in cart:
+            print("Item not in cart.")
         else:
-            qtd = int(input("Quantidade para remover: "))
+            qty = int(input("Quantity to remove: "))
 
-            if qtd >= historico[cafe]:
-                opcoes[cafe][1] += historico[cafe]
-                del historico[cafe]
+            if qty >= cart[coffee]:
+                options[coffee][1] += cart[coffee]
+                del cart[coffee]
             else:
-                historico[cafe] -= qtd
-                opcoes[cafe][1] += qtd
+                cart[coffee] -= qty
+                options[coffee][1] += qty
 
-            print("Removido com sucesso!")
+            print("Item removed successfully!")
 
     else:
-        print("Opção inválida.")
+        print("Invalid option.")
 
     print()
