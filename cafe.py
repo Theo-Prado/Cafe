@@ -1,13 +1,11 @@
 print(".....Canelinha Cafe.....")
 print(".......since 1980.......")
 print()
-
 nome = input("Digite seu nome:")
 print()
 print("Olá,", nome+"!", "Seja bem-vindo(a) ao Canelinha Cafe!")
 print()
 
-# preço, estoque
 opcoes = {
     "cappucino": [12, 10],
     "frappucino": [12, 10],
@@ -18,9 +16,7 @@ opcoes = {
     "espresso latte": [9, 10]
 }
 
-# agora cada usuário tem: senha + cpf
 cadastros = {}
-
 historico = {}
 
 desconto = False
@@ -30,7 +26,7 @@ ciclo = True
 # ---------------- CPF ----------------
 def validar_cpf(cpf):
     cpf = cpf.replace('.', '').replace('-', '')
-    
+
     if len(cpf) != 11 or cpf == cpf[0] * 11:
         return False
 
@@ -74,6 +70,60 @@ def mostrar_carrinho(historico, opcoes, desconto):
         print("Total: R$", total)
 
 
+# ---------------- ADMIN ----------------
+def menu_admin(opcoes):
+    admin_ciclo = True
+
+    while admin_ciclo:
+        print("\n--- MENU ADMIN ---")
+        contador = 1
+        lista = list(opcoes.keys())
+
+        for cafe in lista:
+            print(contador, "-", cafe, "| Estoque:", opcoes[cafe][1])
+            contador += 1
+
+        print("1 - Alterar estoque")
+        print("2 - Adicionar estoque")
+        print("3 - Zerar estoque")
+        print("0 - Sair do admin")
+
+        escolha = int(input("Escolha: "))
+
+        if escolha == 0:
+            admin_ciclo = False
+
+        elif escolha in [1, 2, 3]:
+            while True:
+                try:
+                    item = int(input("Digite o número do produto: "))
+                    if 1 <= item <= len(lista):
+                        break
+                    else:
+                        print(f"Número inválido. Digite um número entre 1 e {len(lista)}.")
+                except ValueError:
+                    print("Entrada inválida. Digite um número inteiro.")
+            
+            cafe = lista[item - 1]
+
+            if escolha == 1:
+                novo = int(input("Novo valor de estoque: "))
+                opcoes[cafe][1] = novo
+                print("Estoque atualizado!")
+
+            elif escolha == 2:
+                add = int(input("Quantidade para adicionar: "))
+                opcoes[cafe][1] += add
+                print("Estoque adicionado!")
+
+            elif escolha == 3:
+                opcoes[cafe][1] = 0
+                print("Estoque zerado!")
+
+        else:
+            print("Opção inválida.")
+
+
 # ---------------- MENU ----------------
 while ciclo:
     contador = 1
@@ -91,13 +141,11 @@ while ciclo:
     escolha = int(input("Escolha: "))
     print()
 
-    # FINALIZAR
     if escolha == 0:
         mostrar_carrinho(historico, opcoes, desconto)
         print("Obrigado por comprar!")
         break
 
-    # COMPRAR
     elif 1 <= escolha <= len(opcoes):
         lista = list(opcoes.keys())
         cafe = lista[escolha - 1]
@@ -112,11 +160,9 @@ while ciclo:
         else:
             print("Estoque insuficiente!")
 
-    # CARRINHO
     elif escolha == 9:
         mostrar_carrinho(historico, opcoes, desconto)
 
-    # CADASTRO
     elif escolha == 10:
         usuario = input("Crie um usuário: ")
 
@@ -137,26 +183,27 @@ while ciclo:
             print("CPF inválido.")
             continue
 
-        cadastros[usuario] = {
-            "senha": senha,
-            "cpf": cpf
-        }
-
-        print("Cadastro realizado com sucesso! Você ganhou 10% de desconto.")
+        cadastros[usuario] = {"senha": senha, "cpf": cpf}
+        print("Cadastro realizado com sucesso! Desconto aplicado.")
         desconto = True
 
-    # LOGIN
     elif escolha == 11:
         usuario = input("Usuário: ")
         senha = input("Senha: ")
 
-        if usuario in cadastros and cadastros[usuario]["senha"] == senha:
+        # 🔥 LOGIN ADMIN
+        if usuario == "admin" and senha == "admin@155":
+            print("Login ADMIN realizado!")
+            menu_admin(opcoes)
+
+        # LOGIN NORMAL
+        elif usuario in cadastros and cadastros[usuario]["senha"] == senha:
             print("Login realizado!")
             desconto = True
+
         else:
             print("Usuário ou senha incorretos.")
 
-    # REMOVER ITEM
     elif escolha == 12:
         lista = list(opcoes.keys())
 
