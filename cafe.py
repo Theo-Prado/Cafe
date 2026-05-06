@@ -6,59 +6,66 @@ print()
 print("Olá,",nome+"!","Seja bem-vindo(a) ao serviço de auto atendimento do Canelinha Cafe! A melhor cafeteria da região desde 1980!")
 print()
 
-opcoes = [
-    "Canelinha (A especialidade da casa!)",
-    "Cappuccino",
-    "Mocaccino",
-    "Espresso",
-    "Espresso Latte",
-    "Latte"
-]
+# O primeiro valor sempre é o preço e o segundo valor sempre é o estoque.
+opcoes = {
+    "cappucino": [12, 10],
+    "frappucino": [12, 10],
+    "moccacino": [12, 10],
+    "macciato": [12, 10],
+    "latte": [10, 10],
+    "espresso": [7, 10],
+    "espresso latte": [9, 10]
+}
 
-precos = [
-    15,
-    12,
-    11,
-    8,
-    10,
-    10
-]
+# Histórico de cadastro, nome, senha e cpf respectivamente.
+cadastros = {}
 
-cadastros = []
-historico = []
-historico_precos = []
+# Histórico do pedido atual
+historico = {}
 
+# Verifica se o cpf é válido para aplicar o desconto.
 cpf_valido = False
+
+# Aplica o desconto.
 desconto = False
+
+# Ciclos para while.
 ciclo = True
 ciclo_cpf = True
 
-def mostrar_carrinho(historico, historico_precos, desconto):
+def mostrar_carrinho(historico, opcoes, desconto):
     if not historico:
-      print("Carrinho vazio.")
-    desconto_10 = sum(historico_precos) * 0.10
-    for i, item in enumerate(historico):
-      print("-", item, "R$", historico_precos[i])
+        print("Carrinho vazio.")
+        return
+
+    total = 0
+
+    for item in historico:
+        quantidade = historico[item]
+        preco = opcoes[item][0]
+
+        subtotal = preco * quantidade
+        total += subtotal
+
+        print(f"- {item} x{quantidade} = R$ {subtotal}")
+
     if desconto:
-      print("Total com desconto: R$",
-              sum(historico_precos) - desconto_10)
+        total_com_desconto = total * 0.9
+        print("Total com desconto: R$", total_com_desconto)
     else:
-        print("Total: R$", sum(historico_precos))
-    if not historico:
-      print("Carrinho vazio.")
+        print("Total: R$", total)
 
 while ciclo:
   contador = 1
-  for i in range(len(opcoes)):
-    cafe = opcoes[i]
-    preco = precos[i]
-    print(contador,"-",cafe,"R$",preco)
-    contador = contador + 1
-  print("7 - Adicionar saldo")
-  print("8 - Mostrar pedidos no carrinho")
-  print("9 - Cadastrar-se para ganhar desconto")
-  print("10 - Fazer login para ganhar desconto")
-  print("11 - Remover um item do pedido")
+  for cafe in opcoes:
+    preco = opcoes[cafe][0]
+    print(contador, "-", cafe, "R$", preco)
+    contador += 1
+  print("8 - Adicionar saldo")
+  print("9 - Mostrar pedidos no carrinho")
+  print("10 - Cadastrar-se para ganhar desconto")
+  print("11 - Fazer login para ganhar desconto")
+  print("12 - Remover um item do pedido")
   print("0 - Finalizar")
   print()
   escolha = int(input("Digite a opção que queira selecionar:"))
@@ -67,16 +74,36 @@ while ciclo:
     ciclo = False
     desconto = False
     cpf_valido = False
-    mostrar_carrinho(historico, historico_precos, desconto)
+    mostrar_carrinho(historico, opcoes, desconto)
     print(f"Obrigado por comprar no Canelinha Cafe! Volte sempre, {nome}!")
-  elif 1 <= escolha <= 6:
-    conta = escolha - 1
-    historico.append(opcoes[conta])
-    historico_precos.append(precos[conta])
-    print("Você escolheu",opcoes[conta]+".","Seu pedido esta sendo preparado!")
-  elif escolha == 8:
-    mostrar_carrinho(historico, historico_precos, desconto)
+elif 1 <= escolha <= len(opcoes):
+    lista_cafes = list(opcoes.keys())
+    cafe = lista_cafes[escolha - 1]
+
+    estoque = opcoes[cafe][1]
+
+    quantidade = int(input(f"Quantos {cafe} você quer? "))
+
+    if quantidade <= 0:
+        print("Quantidade inválida.")
+    
+    elif quantidade <= estoque:
+        # adiciona no carrinho
+        if cafe in historico:
+            historico[cafe] += quantidade
+        else:
+            historico[cafe] = quantidade
+
+        # dá baixa no estoque
+        opcoes[cafe][1] -= quantidade
+
+        print(f"Você escolheu {quantidade}x {cafe}. Pedido sendo preparado!")
+
+    else:
+        print(f"Estoque insuficiente! Temos apenas {estoque} disponível(is).")
   elif escolha == 9:
+    mostrar_carrinho(historico, opcoes, desconto)
+  elif escolha == 10:
     ciclo_cpf = True
     while ciclo_cpf:
       cpf = input("Digite seu cpf:")
@@ -88,7 +115,7 @@ while ciclo:
       for i in range(9):
         soma += int(cpf[i]) * (10 - i)
       dig1 = (soma * 10) % 11
-      if dig1 == 10:
+      if dig1 == 11:
         dig1 = 0
       soma = 0
       for i in range(10):
@@ -109,7 +136,7 @@ while ciclo:
           print("Cadastro realizado com sucesso! Haverá um desconto de 10% em seu pedido!")
       else:
         print("Erro! Cpf inválido ou digitado incorretamente.")
-  elif escolha == 10:
+  elif escolha == 11:
     cpf = input("Digite seu cpf:")
     cpf = cpf.replace('.','').replace('-','').replace('/','').replace('|','').replace('\\','')
     if cpf in cadastros:
@@ -130,7 +157,7 @@ while ciclo:
     print()
     print("Seu carrinho:")
     print()
-    mostrar_carrinho(historico, historico_precos, desconto)
+    mostrar_carrinho(historico, opcoes, desconto)
   else:
     print("Número inválido.")
   print()
