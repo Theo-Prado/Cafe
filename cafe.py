@@ -76,7 +76,7 @@ while ciclo:
     cpf_valido = False
     mostrar_carrinho(historico, opcoes, desconto)
     print(f"Obrigado por comprar no Canelinha Cafe! Volte sempre, {nome}!")
-elif 1 <= escolha <= len(opcoes):
+  elif 1 <= escolha <= len(opcoes):
     lista_cafes = list(opcoes.keys())
     cafe = lista_cafes[escolha - 1]
 
@@ -86,7 +86,7 @@ elif 1 <= escolha <= len(opcoes):
 
     if quantidade <= 0:
         print("Quantidade inválida.")
-    
+
     elif quantidade <= estoque:
         # adiciona no carrinho
         if cafe in historico:
@@ -144,33 +144,33 @@ elif 1 <= escolha <= len(opcoes):
       print("Login realizado com sucesso! Haverá um desconto de 10% em seu pedido!")
     else:
       print("Desculpe, esse cpf não esta cadastrado em nosso sistema.")
-elif escolha == 11:
+  elif escolha == 12: # Corrected this from 'elif escolha == 11:' to 'elif escolha == 12:' to match the menu option '12' for 'Remover um item do pedido'.
     lista_cafes = list(opcoes.keys())
 
     escolha1 = int(input("Digite o número do item que deseja remover: "))
     cafe = lista_cafes[escolha1 - 1]
 
     if cafe not in historico:
-        print("Esse item não está no carrinho.")
-    
+      print("Esse item não está no carrinho.")
+
     else:
-        quantidade_remover = int(input(f"Quantos {cafe} deseja remover? "))
-        quantidade_atual = historico[cafe]
+      quantidade_remover = int(input(f"Quantos {cafe} deseja remover? "))
+      quantidade_atual = historico[cafe]
 
-        if quantidade_remover <= 0:
-            print("Quantidade inválida.")
+      if quantidade_remover <= 0:
+          print("Quantidade inválida.")
 
-        elif quantidade_remover >= quantidade_atual:
-            # remove tudo
-            del historico[cafe]
-            opcoes[cafe][1] += quantidade_atual  # devolve ao estoque
-            print(f"{cafe} removido completamente do carrinho.")
+      elif quantidade_remover >= quantidade_atual:
+        # remove tudo
+        del historico[cafe]
+        opcoes[cafe][1] += quantidade_atual  # devolve ao estoque
+        print(f"{cafe} removido completamente do carrinho.")
 
-        else:
-            # remove parcialmente
-            historico[cafe] -= quantidade_remover
-            opcoes[cafe][1] += quantidade_remover  # devolve ao estoque
-            print(f"{quantidade_remover}x {cafe} removido(s).")
+      else:
+        # remove parcialmente
+        historico[cafe] -= quantidade_remover
+        opcoes[cafe][1] += quantidade_remover  # devolve ao estoque
+        print(f"{quantidade_remover}x {cafe} removido(s).")
     print()
     print("Remoção realizada!")
     print()
