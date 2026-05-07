@@ -68,6 +68,15 @@
     .brand p { margin: 4px 0 0; color: var(--muted); font-size: .92rem; }
     .status { display: flex; gap: 10px; flex-wrap: wrap; }
     .pill { padding: 7px 12px; border-radius: 999px; font-size: .82rem; border: 1px solid var(--line); background: rgba(255,255,255,.03); }
+    .lang-btn {
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: .82rem;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: #ffe2bb;
+      font-weight: 600;
+    }
 
     .layout { display: grid; grid-template-columns: 1.45fr .95fr; }
 
@@ -160,6 +169,7 @@
           <option value="en">English</option>
           <option value="pt-BR">Português (Brasil)</option>
         </select>
+        <button id="toggleLangBtn" class="lang-btn" type="button">Switch to Português</button>
         <span class="pill" id="discountPill">Discount: OFF</span>
         <span class="pill" id="loginPill">Guest mode</span>
       </div>
@@ -257,6 +267,7 @@
         subtotal: "Subtotal",
         discount10: "Discount (10%)",
         total: "Total",
+        switchTo: "Switch to Português",
       },
       "pt-BR": {
         pageLang: "pt-BR",
@@ -282,6 +293,7 @@
         subtotal: "Subtotal",
         discount10: "Desconto (10%)",
         total: "Total",
+        switchTo: "Mudar para English",
       }
     };
     let currentLang = "en";
@@ -416,6 +428,8 @@
       if (el("loginPill").textContent === "Guest mode" || el("loginPill").textContent === "Modo convidado") {
         el("loginPill").textContent = t("guestMode");
       }
+      el("toggleLangBtn").textContent = t("switchTo");
+      el("langSelect").value = currentLang;
     }
 
     function renderAll() { renderLanguage(); renderMenu(); renderCart(); renderStatus(); }
@@ -493,6 +507,10 @@
     };
     el("langSelect").onchange = e => {
       currentLang = e.target.value;
+      renderAll();
+    };
+    el("toggleLangBtn").onclick = () => {
+      currentLang = currentLang === "en" ? "pt-BR" : "en";
       renderAll();
     };
 
