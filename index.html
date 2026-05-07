@@ -268,6 +268,33 @@
         discount10: "Discount (10%)",
         total: "Total",
         switchTo: "Switch to Português",
+        invalidItemOrQty: "Invalid item or quantity.",
+        insufficientStock: "Insufficient stock!",
+        invalidItemNumber: "Invalid item number.",
+        itemNotInCart: "Item not in cart.",
+        qtyGreaterThanZero: "Quantity must be greater than zero.",
+        itemAdded: "Item added!",
+        itemRemoved: "Item removed successfully!",
+        cartEmpty: "Cart is empty.",
+        enterName: "Please enter your name.",
+        welcomeNamed: "Hello, {name}! Welcome to Canelinha Cafe.",
+        nameSaved: "Name saved. Start building your order.",
+        usernameRequired: "Username is required.",
+        usernameExists: "Username already exists.",
+        passwordsMismatch: "Passwords do not match.",
+        invalidCpf: "Invalid CPF.",
+        registeredAs: "Registered: {user}",
+        registrationOk: "Registration successful! Discount applied.",
+        adminModeActive: "Admin mode active",
+        adminLoginOk: "ADMIN login successful!",
+        loggedInAs: "Logged in: {user}",
+        loginOk: "Login successful!",
+        loginError: "Incorrect username or password.",
+        invalidRange: "Invalid number. Choose between 1 and {max}.",
+        priceGreaterThanZero: "Price must be greater than zero.",
+        adminUpdateOk: "Admin update applied.",
+        cartRefreshed: "Cart refreshed.",
+        thanksPurchase: "Thanks for your purchase, {name}!"
       },
       "pt-BR": {
         pageLang: "pt-BR",
@@ -294,6 +321,33 @@
         discount10: "Desconto (10%)",
         total: "Total",
         switchTo: "Mudar para English",
+        invalidItemOrQty: "Item ou quantidade inválidos.",
+        insufficientStock: "Estoque insuficiente!",
+        invalidItemNumber: "Número do item inválido.",
+        itemNotInCart: "Item não está no carrinho.",
+        qtyGreaterThanZero: "A quantidade deve ser maior que zero.",
+        itemAdded: "Item adicionado!",
+        itemRemoved: "Item removido com sucesso!",
+        cartEmpty: "Carrinho vazio.",
+        enterName: "Por favor, digite seu nome.",
+        welcomeNamed: "Olá, {name}! Bem-vindo ao Canelinha Cafe.",
+        nameSaved: "Nome salvo. Comece a montar seu pedido.",
+        usernameRequired: "Nome de usuário é obrigatório.",
+        usernameExists: "Nome de usuário já existe.",
+        passwordsMismatch: "As senhas não coincidem.",
+        invalidCpf: "CPF inválido.",
+        registeredAs: "Cadastrado: {user}",
+        registrationOk: "Cadastro realizado! Desconto aplicado.",
+        adminModeActive: "Modo administrador ativo",
+        adminLoginOk: "Login ADMIN realizado!",
+        loggedInAs: "Conectado: {user}",
+        loginOk: "Login realizado com sucesso!",
+        loginError: "Usuário ou senha incorretos.",
+        invalidRange: "Número inválido. Escolha entre 1 e {max}.",
+        priceGreaterThanZero: "O preço deve ser maior que zero.",
+        adminUpdateOk: "Atualização de admin aplicada.",
+        cartRefreshed: "Carrinho atualizado.",
+        thanksPurchase: "Obrigado pela compra, {name}!"
       }
     };
     let currentLang = "en";
@@ -315,6 +369,7 @@
     const el = id => document.getElementById(id);
     const fmt = n => `$ ${Number(n).toFixed(2)}`;
     const t = k => i18n[currentLang][k] || i18n.en[k] || k;
+    const tf = (k, vars = {}) => t(k).replace(/\{(\w+)\}/g, (_, key) => vars[key] ?? `{${key}}`);
 
     function validateCPF(cpf) {
       cpf = cpf.replace(/[.\-\s]/g, "");
@@ -360,20 +415,20 @@
     function addItem(index, qty) {
       const keys = Object.keys(options);
       const coffee = keys[index];
-      if (!coffee || qty <= 0) return setMessage("Invalid item or quantity.", "err");
-      if (qty > options[coffee][1]) return setMessage("Insufficient stock!", "err");
+      if (!coffee || qty <= 0) return setMessage(t("invalidItemOrQty"), "err");
+      if (qty > options[coffee][1]) return setMessage(t("insufficientStock"), "err");
       cart[coffee] = (cart[coffee] || 0) + qty;
       options[coffee][1] -= qty;
-      setMessage("Item added!", "ok");
+      setMessage(t("itemAdded"), "ok");
       renderAll();
     }
 
     function removeItem(itemNumber, qty) {
       const keys = Object.keys(options);
       const coffee = keys[itemNumber - 1];
-      if (!coffee) return setMessage("Invalid item number.", "err");
-      if (!(coffee in cart)) return setMessage("Item not in cart.", "warn");
-      if (qty <= 0) return setMessage("Quantity must be greater than zero.", "err");
+      if (!coffee) return setMessage(t("invalidItemNumber"), "err");
+      if (!(coffee in cart)) return setMessage(t("itemNotInCart"), "warn");
+      if (qty <= 0) return setMessage(t("qtyGreaterThanZero"), "err");
       if (qty >= cart[coffee]) {
         options[coffee][1] += cart[coffee];
         delete cart[coffee];
@@ -381,7 +436,7 @@
         cart[coffee] -= qty;
         options[coffee][1] += qty;
       }
-      setMessage("Item removed successfully!", "ok");
+      setMessage(t("itemRemoved"), "ok");
       renderAll();
     }
 
@@ -397,7 +452,7 @@
         row.innerHTML = `<span>${item} × ${qty}</span><strong>${fmt(sub)}</strong>`;
         list.appendChild(row);
       });
-      if (!Object.keys(cart).length) list.innerHTML = `<div class="cart-item">Cart is empty.</div>`;
+      if (!Object.keys(cart).length) list.innerHTML = `<div class="cart-item">${t("cartEmpty")}</div>`;
       const disc = discount ? subtotal * 0.10 : 0;
       el("subtotal").textContent = fmt(subtotal);
       el("discountValue").textContent = fmt(disc);
@@ -436,10 +491,10 @@
 
     el("setNameBtn").onclick = () => {
       const v = el("nameInput").value.trim();
-      if (!v) return setMessage("Please enter your name.", "warn");
+      if (!v) return setMessage(t("enterName"), "warn");
       customerName = v;
-      el("welcome").textContent = `Hello, ${customerName}! Welcome to Canelinha Cafe.`;
-      setMessage("Name saved. Start building your order.", "ok");
+      el("welcome").textContent = tf("welcomeNamed", { name: customerName });
+      setMessage(t("nameSaved"), "ok");
     };
 
     el("registerBtn").onclick = () => {
@@ -447,14 +502,14 @@
       const p = el("regPass").value;
       const c = el("regConfirm").value;
       const cpf = el("regCpf").value.trim();
-      if (!u) return setMessage("Username is required.", "err");
-      if (users[u]) return setMessage("Username already exists.", "err");
-      if (p !== c) return setMessage("Passwords do not match.", "err");
-      if (!validateCPF(cpf)) return setMessage("Invalid CPF.", "err");
+      if (!u) return setMessage(t("usernameRequired"), "err");
+      if (users[u]) return setMessage(t("usernameExists"), "err");
+      if (p !== c) return setMessage(t("passwordsMismatch"), "err");
+      if (!validateCPF(cpf)) return setMessage(t("invalidCpf"), "err");
       users[u] = { password: p, cpf };
       discount = true;
-      el("loginPill").textContent = `Registered: ${u}`;
-      setMessage("Registration successful! Discount applied.", "ok");
+      el("loginPill").textContent = tf("registeredAs", { user: u });
+      setMessage(t("registrationOk"), "ok");
       renderStatus(); renderCart();
     };
 
@@ -463,17 +518,17 @@
       const p = el("loginPass").value;
       if (u === "admin" && p === "admin@155") {
         el("adminBox").style.display = "block";
-        el("loginPill").textContent = "Admin mode active";
-        setMessage("ADMIN login successful!", "ok");
+        el("loginPill").textContent = t("adminModeActive");
+        setMessage(t("adminLoginOk"), "ok");
         return;
       }
       if (users[u] && users[u].password === p) {
         discount = true;
-        el("loginPill").textContent = `Logged in: ${u}`;
-        setMessage("Login successful!", "ok");
+        el("loginPill").textContent = tf("loggedInAs", { user: u });
+        setMessage(t("loginOk"), "ok");
         renderStatus(); renderCart();
       } else {
-        setMessage("Incorrect username or password.", "err");
+        setMessage(t("loginError"), "err");
       }
     };
 
@@ -482,15 +537,15 @@
       const value = Number(el("adminValue").value);
       const keys = Object.keys(options);
       const coffee = keys[item - 1];
-      if (!coffee) return setMessage(`Invalid number. Choose between 1 and ${keys.length}.`, "err");
+      if (!coffee) return setMessage(tf("invalidRange", { max: keys.length }), "err");
       if (type === "setStock") options[coffee][1] = value;
       if (type === "addStock") options[coffee][1] += value;
       if (type === "resetStock") options[coffee][1] = 0;
       if (type === "setPrice") {
-        if (value <= 0) return setMessage("Price must be greater than zero.", "err");
+        if (value <= 0) return setMessage(t("priceGreaterThanZero"), "err");
         options[coffee][0] = value;
       }
-      setMessage("Admin update applied.", "ok");
+      setMessage(t("adminUpdateOk"), "ok");
       renderAll();
     }
 
@@ -500,10 +555,10 @@
     el("setPriceBtn").onclick = () => adminUpdate("setPrice");
 
     el("removeBtn").onclick = () => removeItem(Number(el("removeIndex").value), Number(el("removeQty").value));
-    el("viewCartBtn").onclick = () => { renderCart(); setMessage("Cart refreshed.", "ok"); };
+    el("viewCartBtn").onclick = () => { renderCart(); setMessage(t("cartRefreshed"), "ok"); };
     el("finishBtn").onclick = () => {
       renderCart();
-      setMessage(`Thanks for your purchase, ${customerName}!`, "ok");
+      setMessage(tf("thanksPurchase", { name: customerName }), "ok");
     };
     el("langSelect").onchange = e => {
       currentLang = e.target.value;
