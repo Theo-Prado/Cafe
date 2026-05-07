@@ -156,6 +156,10 @@
         <p>Since 1980 • Self-service kiosk inspired by the Python CLI flow</p>
       </div>
       <div class="status">
+        <select class="pill" id="langSelect" aria-label="Language selector">
+          <option value="en">English</option>
+          <option value="pt-BR">Português (Brasil)</option>
+        </select>
         <span class="pill" id="discountPill">Discount: OFF</span>
         <span class="pill" id="loginPill">Guest mode</span>
       </div>
@@ -228,6 +232,60 @@
   </main>
 
   <script>
+    const i18n = {
+      "en": {
+        pageLang: "en",
+        title: "Canelinha Cafe • Digital Kiosk",
+        subtitle: "Since 1980 • Self-service kiosk inspired by the Python CLI flow",
+        discount: "Discount",
+        on: "ON",
+        off: "OFF",
+        guestMode: "Guest mode",
+        helloStart: "Hello! Enter your name to start your order.",
+        namePlaceholder: "Enter your name",
+        startBtn: "Start",
+        menuTitle: "Menu & Stock",
+        price: "Price",
+        stock: "Stock",
+        add: "Add",
+        viewCart: "View Cart",
+        finishOrder: "Finish Order",
+        removeItemPlaceholder: "Item # to remove",
+        qtyPlaceholder: "Qty",
+        remove: "Remove",
+        cartTitle: "Cart Summary",
+        subtotal: "Subtotal",
+        discount10: "Discount (10%)",
+        total: "Total",
+      },
+      "pt-BR": {
+        pageLang: "pt-BR",
+        title: "Canelinha Cafe • Totem Digital",
+        subtitle: "Desde 1980 • Totem de autoatendimento inspirado no fluxo CLI em Python",
+        discount: "Desconto",
+        on: "ATIVO",
+        off: "INATIVO",
+        guestMode: "Modo convidado",
+        helloStart: "Olá! Digite seu nome para começar seu pedido.",
+        namePlaceholder: "Digite seu nome",
+        startBtn: "Iniciar",
+        menuTitle: "Cardápio e Estoque",
+        price: "Preço",
+        stock: "Estoque",
+        add: "Adicionar",
+        viewCart: "Ver carrinho",
+        finishOrder: "Finalizar pedido",
+        removeItemPlaceholder: "Item # para remover",
+        qtyPlaceholder: "Qtd",
+        remove: "Remover",
+        cartTitle: "Resumo do carrinho",
+        subtotal: "Subtotal",
+        discount10: "Desconto (10%)",
+        total: "Total",
+      }
+    };
+    let currentLang = "en";
+
     const options = {
       "cappuccino": [12, 10],
       "frappuccino": [12, 10],
@@ -244,6 +302,7 @@
 
     const el = id => document.getElementById(id);
     const fmt = n => `$ ${Number(n).toFixed(2)}`;
+    const t = k => i18n[currentLang][k] || i18n.en[k] || k;
 
     function validateCPF(cpf) {
       cpf = cpf.replace(/[.\-\s]/g, "");
@@ -272,10 +331,10 @@
         card.className = "card";
         card.innerHTML = `
           <div class="name">${idx + 1}. ${coffee}</div>
-          <div class="meta">Price: ${fmt(price)} • Stock: ${stock}</div>
+          <div class="meta">${t("price")}: ${fmt(price)} • ${t("stock")}: ${stock}</div>
           <div class="row">
             <input type="number" min="1" value="1" id="qty-${idx}" />
-            <button data-index="${idx}">Add</button>
+            <button data-index="${idx}">${t("add")}</button>
           </div>
         `;
         card.querySelector("button").onclick = () => {
@@ -334,10 +393,32 @@
     }
 
     function renderStatus() {
-      el("discountPill").textContent = `Discount: ${discount ? "ON" : "OFF"}`;
+      el("discountPill").textContent = `${t("discount")}: ${discount ? t("on") : t("off")}`;
     }
 
-    function renderAll() { renderMenu(); renderCart(); renderStatus(); }
+    function renderLanguage() {
+      document.documentElement.lang = i18n[currentLang].pageLang;
+      document.title = t("title");
+      document.querySelector(".brand p").textContent = t("subtitle");
+      if (customerName === "Guest") el("welcome").textContent = t("helloStart");
+      el("nameInput").placeholder = t("namePlaceholder");
+      el("setNameBtn").textContent = t("startBtn");
+      document.querySelector(".section h2").textContent = t("menuTitle");
+      el("viewCartBtn").textContent = t("viewCart");
+      el("finishBtn").textContent = t("finishOrder");
+      el("removeIndex").placeholder = t("removeItemPlaceholder");
+      el("removeQty").placeholder = t("qtyPlaceholder");
+      el("removeBtn").textContent = t("remove");
+      document.querySelector("aside.section h2").textContent = t("cartTitle");
+      el("subtotal").previousElementSibling.textContent = t("subtotal");
+      el("discountValue").previousElementSibling.textContent = t("discount10");
+      el("total").previousElementSibling.textContent = t("total");
+      if (el("loginPill").textContent === "Guest mode" || el("loginPill").textContent === "Modo convidado") {
+        el("loginPill").textContent = t("guestMode");
+      }
+    }
+
+    function renderAll() { renderLanguage(); renderMenu(); renderCart(); renderStatus(); }
 
     el("setNameBtn").onclick = () => {
       const v = el("nameInput").value.trim();
@@ -409,6 +490,10 @@
     el("finishBtn").onclick = () => {
       renderCart();
       setMessage(`Thanks for your purchase, ${customerName}!`, "ok");
+    };
+    el("langSelect").onchange = e => {
+      currentLang = e.target.value;
+      renderAll();
     };
 
     renderAll();
