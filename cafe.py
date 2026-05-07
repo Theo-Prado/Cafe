@@ -87,6 +87,7 @@ def admin_menu(options):
         print("1 - Change stock")
         print("2 - Add stock")
         print("3 - Reset stock")
+        print("4 - Change price")
         print("0 - Exit admin")
 
         choice = int(input("Choice: "))
@@ -94,7 +95,7 @@ def admin_menu(options):
         if choice == 0:
             admin_running = False
 
-        elif choice in [1, 2, 3]:
+        elif choice in [1, 2, 3, 4]:
             while True:
                 try:
                     item = int(input("Enter product number: "))
@@ -120,6 +121,14 @@ def admin_menu(options):
             elif choice == 3:
                 options[coffee][1] = 0
                 print("Stock reset!")
+
+            elif choice == 4:
+                new_price = float(input("New price value: $ "))
+                if new_price <= 0:
+                    print("Price must be greater than zero.")
+                else:
+                    options[coffee][0] = new_price
+                    print("Price updated!")
 
         else:
             print("Invalid option.")
