@@ -1,85 +1,106 @@
-# ☕ Canelinha Cafe — Sistema de Auto Atendimento
+# ☕ Canelinha Cafe — Self-Service Ordering System
 
-> Sistema de auto atendimento interativo via terminal para a cafeteria Canelinha Cafe, tradição desde 1980.
+Interactive coffee ordering project with two interfaces:
 
----
-
-## 📋 Sobre o Projeto
-
-O **Canelinha Cafe** é uma aplicação de linha de comando desenvolvida em Python que simula um totem de auto atendimento de cafeteria. O cliente pode montar seu pedido, gerenciar o carrinho, se cadastrar com CPF para obter desconto e finalizar a compra, tudo de forma simples e interativa.
+- **Python CLI app** (`cafe.py`) for terminal-based ordering.
+- **Web kiosk UI** (`index.html`) inspired by the same flow.
 
 ---
 
-## ✨ Funcionalidades
+## 📋 Project Overview
 
-- Saudação personalizada com o nome do cliente
-- Cardápio com **6 opções de bebidas** e seus respectivos preços
-- **Carrinho de compras** com adição e remoção de itens
-- **Cadastro por CPF** com validação completa dos dígitos verificadores
-- **Login por CPF** para clientes já cadastrados
-- **Desconto de 10%** para clientes cadastrados
-- Exibição do total com ou sem desconto
-- Resumo do pedido ao finalizar
+**Canelinha Cafe** simulates a self-service kiosk where customers can:
 
----
-
-## 🍵 Cardápio
-
-| # | Bebida | Preço |
-|---|---|---|
-| 1 | Canelinha *(A especialidade da casa!)* | R$ 15 |
-| 2 | Cappuccino | R$ 12 |
-| 3 | Mocaccino | R$ 11 |
-| 4 | Espresso | R$ 8 |
-| 5 | Espresso Latte | R$ 10 |
-| 6 | Latte | R$ 10 |
+- Browse the coffee menu and stock
+- Add or remove items from a cart
+- Register/login to activate a discount
+- Validate CPF during registration
+- Finish an order with a final summary
 
 ---
 
-## 🚀 Como Usar
+## ✨ Current Features
 
-### Pré-requisitos
+### CLI (`cafe.py`)
 
-- Python 3.x instalado
+- Customer greeting and interactive menu loop
+- Product catalog with **price + stock control**
+- Cart management (add, view, remove)
+- User registration/login with CPF validation
+- 10% discount for authenticated customers
+- Admin login with stock/price management tools
 
-### Executando o programa
+### Web UI (`index.html`)
+
+- Responsive digital kiosk layout
+- Visual menu cards with quantity inputs
+- Real-time cart summary and totals
+- Registration/login forms with discount state
+- English and Portuguese (Brazil) language toggle
+
+---
+
+## 🧩 Repository Structure
+
+```text
+.
+├── cafe.py      # Terminal application
+├── index.html   # Web kiosk interface
+└── README.md
+```
+
+---
+
+## 🚀 How to Run
+
+### 1) Terminal version
+
+**Requirements:** Python 3
 
 ```bash
 python cafe.py
 ```
 
-### Opções do menu
+### 2) Web version
 
-| Opção | Ação |
-|---|---|
-| `1` a `6` | Adicionar bebida ao carrinho |
-| `8` | Ver carrinho e total |
-| `9` | Cadastrar CPF e ganhar 10% de desconto |
-| `10` | Fazer login com CPF cadastrado |
-| `11` | Remover item do carrinho |
-| `0` | Finalizar pedido |
+Open `index.html` in any modern browser.
 
----
+If you prefer a local server:
 
-## 🔐 Sistema de Desconto por CPF
+```bash
+python -m http.server 8000
+```
 
-- Ao se cadastrar (opção `9`), o CPF é **validado matematicamente** pelos dígitos verificadores
-- CPFs já cadastrados podem fazer login (opção `10`) para ativar o desconto
-- O desconto de **10%** é aplicado automaticamente no total do pedido
+Then visit: `http://localhost:8000`
 
 ---
 
-## 🛠️ Tecnologias
+## 🔐 Discount and CPF Logic
 
-- **Linguagem:** Python 3
-- **Interface:** Terminal / Linha de Comando
-
----
-
-## 🤝 Contribuições
-
-Contribuições são bem-vindas! Sinta-se à vontade para abrir uma *issue* ou enviar um *pull request* com melhorias, correções ou novas funcionalidades.
+- Registration requires a valid CPF (check digits are validated).
+- Successful registration enables the 10% discount.
+- Returning users can log in to reactivate discount mode.
 
 ---
 
-*"A melhor cafeteria da região desde 1980." — Canelinha Cafe ☕*
+## 🛠️ Tech Stack
+
+- **Python 3** (CLI logic)
+- **HTML/CSS/JavaScript** (web interface)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome via issues and pull requests.
+
+Suggested improvements:
+
+- Persist users/orders in a database
+- Add automated tests
+- Separate CLI logic into reusable modules
+- Add a backend API for the web UI
+
+---
+
+> “The best coffee shop in town since 1980.” — Canelinha Cafe ☕
