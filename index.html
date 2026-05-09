@@ -211,7 +211,7 @@
 
         <div class="forms">
           <div class="box">
-            <h3>Register (applies discount)</h3>
+            <h3 id="registerTitle">Register (applies discount)</h3>
             <input id="regUser" placeholder="Username" />
             <div class="row"><input id="regPass" type="password" placeholder="Password" /><input id="regConfirm" type="password" placeholder="Confirm" /></div>
             <input id="regCpf" placeholder="CPF (only digits or formatted)" />
@@ -219,13 +219,13 @@
           </div>
 
           <div class="box">
-            <h3>Login (user/admin)</h3>
+            <h3 id="loginTitle">Login (user/admin)</h3>
             <input id="loginUser" placeholder="Username" />
             <div class="row"><input id="loginPass" type="password" placeholder="Password" /><button id="loginBtn">Login</button></div>
           </div>
 
           <div class="box" id="adminBox" style="display:none;">
-            <h3>Admin Controls</h3>
+            <h3 id="adminTitle">Admin Controls</h3>
             <div class="row"><input id="adminItem" type="number" min="1" placeholder="Item #" /><input id="adminValue" type="number" placeholder="Value" /></div>
             <div class="row" style="display:grid;grid-template-columns:1fr 1fr;">
               <button class="ghost" id="setStockBtn">Set stock</button>
@@ -268,6 +268,21 @@
         discount10: "Discount (10%)",
         total: "Total",
         switchTo: "Switch to Português",
+        registerTitle: "Register (applies discount)",
+        usernamePlaceholder: "Username",
+        passwordPlaceholder: "Password",
+        confirmPlaceholder: "Confirm",
+        cpfPlaceholder: "CPF (only digits or formatted)",
+        registerBtn: "Register",
+        loginTitle: "Login (user/admin)",
+        loginBtn: "Login",
+        adminTitle: "Admin Controls",
+        adminItemPlaceholder: "Item #",
+        adminValuePlaceholder: "Value",
+        setStockBtn: "Set stock",
+        addStockBtn: "Add stock",
+        resetStockBtn: "Reset stock",
+        setPriceBtn: "Set price",
         invalidItemOrQty: "Invalid item or quantity.",
         insufficientStock: "Insufficient stock!",
         invalidItemNumber: "Invalid item number.",
@@ -313,7 +328,7 @@
         add: "Adicionar",
         viewCart: "Ver carrinho",
         finishOrder: "Finalizar pedido",
-        removeItemPlaceholder: "Item # para remover",
+        removeItemPlaceholder: "Item nº para remover",
         qtyPlaceholder: "Qtd",
         remove: "Remover",
         cartTitle: "Resumo do carrinho",
@@ -321,6 +336,21 @@
         discount10: "Desconto (10%)",
         total: "Total",
         switchTo: "Mudar para English",
+        registerTitle: "Cadastro (aplica desconto)",
+        usernamePlaceholder: "Nome de usuário",
+        passwordPlaceholder: "Senha",
+        confirmPlaceholder: "Confirmar",
+        cpfPlaceholder: "CPF (somente dígitos ou formatado)",
+        registerBtn: "Cadastrar",
+        loginTitle: "Login (usuário/admin)",
+        loginBtn: "Entrar",
+        adminTitle: "Controles de administrador",
+        adminItemPlaceholder: "Item nº",
+        adminValuePlaceholder: "Valor",
+        setStockBtn: "Definir estoque",
+        addStockBtn: "Adicionar estoque",
+        resetStockBtn: "Zerar estoque",
+        setPriceBtn: "Definir preço",
         invalidItemOrQty: "Item ou quantidade inválidos.",
         insufficientStock: "Estoque insuficiente!",
         invalidItemNumber: "Número do item inválido.",
@@ -480,6 +510,23 @@
       el("subtotal").previousElementSibling.textContent = t("subtotal");
       el("discountValue").previousElementSibling.textContent = t("discount10");
       el("total").previousElementSibling.textContent = t("total");
+      el("registerTitle").textContent = t("registerTitle");
+      el("regUser").placeholder = t("usernamePlaceholder");
+      el("regPass").placeholder = t("passwordPlaceholder");
+      el("regConfirm").placeholder = t("confirmPlaceholder");
+      el("regCpf").placeholder = t("cpfPlaceholder");
+      el("registerBtn").textContent = t("registerBtn");
+      el("loginTitle").textContent = t("loginTitle");
+      el("loginUser").placeholder = t("usernamePlaceholder");
+      el("loginPass").placeholder = t("passwordPlaceholder");
+      el("loginBtn").textContent = t("loginBtn");
+      el("adminTitle").textContent = t("adminTitle");
+      el("adminItem").placeholder = t("adminItemPlaceholder");
+      el("adminValue").placeholder = t("adminValuePlaceholder");
+      el("setStockBtn").textContent = t("setStockBtn");
+      el("addStockBtn").textContent = t("addStockBtn");
+      el("resetStockBtn").textContent = t("resetStockBtn");
+      el("setPriceBtn").textContent = t("setPriceBtn");
       if (el("loginPill").textContent === "Guest mode" || el("loginPill").textContent === "Modo convidado") {
         el("loginPill").textContent = t("guestMode");
       }
